@@ -138,7 +138,8 @@ void main() {
       expect(actual, equals(expected));
     });
 
-    test('Test findAndSubst on a value with two variables, one does not exist', () {
+    test('Test findAndSubst on a value with two variables, one does not exist',
+        () {
       properties.setProperty('key1', 'the value is \${key2} and \${noexist}');
       String expected = 'the value is value2 and ';
       String actual = properties.findAndSubstitute('key1');

@@ -8,7 +8,7 @@ class Properties {
   static final String _delimStart = "\${";
   static final String _delimStop = '}';
   static final int _delimStartLen = 2;
-  static final  int _delimStopLen = 1;
+  static final int _delimStopLen = 1;
 
   final LinkedHashMap<String, String> _map;
 
@@ -56,7 +56,7 @@ class Properties {
   }
 
   void _loadFromLines(List<String> lines) {
-    for(String line in lines) {
+    for (String line in lines) {
       if (line.trim().isNotEmpty && !line.trim().startsWith('#')) {
         List<String> tokens = line.trim().split('=');
         if (tokens.length == 1) {
