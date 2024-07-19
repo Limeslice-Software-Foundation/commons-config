@@ -29,26 +29,15 @@ The Commons Configuration software library provides a generic configuration inte
 </details>
 
 
-## About The Project
+## About The Package
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
-
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+To do: add more info about package here
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 ### Built With
-
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
 * Dart 3.4.3
 
@@ -67,7 +56,9 @@ Needs Dart SDK 3.4.3
 
 ### Installation
 
-To do: add info here.
+```
+pub add commons_config
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -75,7 +66,25 @@ To do: add info here.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-To do: add usage info here.
+Import library
+```Dart
+import 'package:commons_config/commons_config.dart';
+```
+
+Create a Properties instance
+```Dart
+Properties properties = Properties();
+```
+
+Load the properties from a file
+```Dart
+properties.loadSync(File('loggin.props'));
+```
+
+Read a property with the getProperty method
+```Dart
+print(properties.getProperty('rootLogger'));
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -85,7 +94,7 @@ To do: add usage info here.
 
 - [x] Project skeleton and initial setup
 - [x] Update readme
-- [ ] Add Properties class
+- [x] Add Properties class
 
 See the [open issues](https://github.com/Limeslice-Software-Foundation/commons-config/issues) for a full list of proposed features (and known issues).
 

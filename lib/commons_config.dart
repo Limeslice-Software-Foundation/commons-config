@@ -3,3 +3,4 @@
 /// to read configuration data from a variety of sources.
 library;
 
+export 'src/properties/properties.dart';
