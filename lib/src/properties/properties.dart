@@ -65,7 +65,7 @@ class Properties {
           _map[tokens[0]] = tokens[1];
         }
       }
-    };
+    }
   }
 
   /// Load the set of properties synchronously from the file.
