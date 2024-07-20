@@ -1,8 +1,7 @@
 name: commons_config
 description: >-
-  The Commons Configuration software library provides a generic configuration 
-  interface which enables a Dart/Flutter application to read configuration data 
-  from a variety of sources.
+  Commons Configuration provides generic configuration interface which 
+  enables an application to read configuration data from a variety of sources.
 version: 0.0.3
 repository: https://github.com/Limeslice-Software-Foundation/commons-config
 
