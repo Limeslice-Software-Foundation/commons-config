@@ -2,53 +2,36 @@
 
 The Commons Configuration software library provides a generic configuration interface which enables a Dart/Flutter application to read configuration data from a variety of sources.
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+Note that this project is still in its early stages and so may not yet provide complete/full functionality. We will be building up functionality over the next few months through numerous small iterative releases.
+
+## Table of Contents
+- [Commons Configuration](#commons-configuration)
+  - [Table of Contents](#table-of-contents)
+  - [About The Project](#about-the-project)
+    - [Features](#features)
+  - [Getting Started](#getting-started)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [Import Package](#import-package)
+  - [Roadmap](#roadmap)
+  - [Contributing](#contributing)
+  - [License](#license)
+  - [Contact](#contact)
+  - [Acknowledgments](#acknowledgments)
+  - [Limitation of Liability](#limitation-of-liability)
 
 
-## About The Package
+
+## About The Project
 
 To do: add more info about package here
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Features
 
 
-
-### Built With
-
-* Dart 3.4.3
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+To do: describe how to get started
 
 ### Prerequisites
 
@@ -60,12 +43,10 @@ Needs Dart SDK 3.4.3
 pub add commons_config
 ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- USAGE EXAMPLES -->
 ## Usage
 
+### Import Package
 Import library
 ```Dart
 import 'package:commons_config/commons_config.dart';
@@ -86,22 +67,11 @@ Read a property with the getProperty method
 print(properties.getProperty('rootLogger'));
 ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- ROADMAP -->
 ## Roadmap
-
-- [x] Project skeleton and initial setup
-- [x] Update readme
-- [x] Add Properties class
 
 See the [open issues](https://github.com/Limeslice-Software-Foundation/commons-config/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -115,29 +85,26 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- LICENSE -->
 ## License
 
-Distributed under the Apache 2.0 License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- CONTACT -->
 ## Contact
 
 Limeslice Software Foundation [https://limeslice.org](https://limeslice.org)
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
-<!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
 We would like to thank the authors of the Apache Commons Configuration package which provided the basis for this package. 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+## Limitation of Liability
 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
