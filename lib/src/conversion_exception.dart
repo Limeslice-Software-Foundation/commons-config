@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// The Commons Configuration software library provides a generic
-/// configuration interface which enables a Dart/Flutter application
-/// to read configuration data from a variety of sources.
-library;
+/// Exception thrown when a property is incompatible with the type requested.
+class ConversionException implements Exception {
+  /// The cause of the exception.
+  String cause;
 
-export 'src/properties/properties.dart';
-export 'src/conversion_exception.dart';
-export 'src/property_converter.dart';
+  /// Create a new instance with the given cause.
+  ConversionException(this.cause);
+}

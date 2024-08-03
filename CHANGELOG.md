@@ -1,3 +1,7 @@
+## 0.0.5
+- Add PropertyConvertor class.
+- Changed license to MIT license.
+
 ## 0.0.4
 - Add file header copyright notice
 
@@ -10,6 +14,5 @@
 - Update library doc comment.
 
 ## 0.0.1
-
 - Initial version.
 - Project skeleton setup.
