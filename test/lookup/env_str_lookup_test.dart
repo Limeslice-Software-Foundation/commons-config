@@ -13,12 +13,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// The Commons Configuration software library provides a generic
-/// configuration interface which enables a Dart/Flutter application
-/// to read configuration data from a variety of sources.
-library;
+import 'package:commons_config/commons_config.dart';
+import 'package:test/test.dart';
 
-export 'src/properties/properties.dart';
-export 'src/conversion_exception.dart';
-export 'src/property_converter.dart';
-export 'src/lookup/env_str_lookup.dart';
+void main() {
+  test('Test read environment variable', () {
+    EnvStrLookup lookup = EnvStrLookup();
+    String? actual = lookup.lookup('PATH');
+    expect(actual, equals(isNotNull));
+  });
+
+  test('Test null value', () {
+    EnvStrLookup lookup = EnvStrLookup();
+    String? actual = lookup.lookup(null);
+    expect(actual, equals(isNull));
+  });
+}
