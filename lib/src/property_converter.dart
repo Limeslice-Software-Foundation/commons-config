@@ -14,6 +14,7 @@
 // limitations under the License.
 
 import 'package:commons_config/commons_config.dart';
+import 'package:commons_lang/commons_lang.dart';
 
 /// A utility class to convert the configuration properties into any type.
 class PropertyConverter {
@@ -30,15 +31,11 @@ class PropertyConverter {
 
   /// Convert the specified object into a bool.
   /// Throws ConversionException if the value cannot be converted.
-  bool toBool(Object value) {
+  bool toBool(Object? value) {
     if (value is bool) {
       return value;
     } else if (value is String) {
-      bool? b = bool.tryParse(value, caseSensitive: false);
-      if (b == null) {
-        throw ConversionException(
-            "The value $value can't be converted to a bool");
-      }
+      bool? b = BoolUtils.fromString(value);
       return b;
     } else {
       throw ConversionException(

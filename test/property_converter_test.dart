@@ -41,8 +41,7 @@ void main() {
     });
 
     test('toBool from non bool String', () {
-      expect(() => PropertyConverter().toBool('this is not a bool'),
-          throwsA(TypeMatcher<ConversionException>()));
+      expect(PropertyConverter().toBool('this is not a bool'), equals(false));
     });
 
     test('toBool from List throws exception', () {
