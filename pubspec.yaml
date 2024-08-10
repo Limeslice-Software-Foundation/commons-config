@@ -2,7 +2,7 @@ name: commons_config
 description: >-
   Commons Configuration provides generic configuration interface which 
   enables an application to read configuration data from a variety of sources.
-version: 0.0.5
+version: 0.0.6
 repository: https://github.com/Limeslice-Software-Foundation/commons-config
 
 environment:

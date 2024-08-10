@@ -10,7 +10,8 @@ Note that this project is still in its early stages and so may not yet provide c
   - [About The Project](#about-the-project)
     - [Features](#features)
   - [Getting Started](#getting-started)
-  - [Installation](#installation)
+    - [Installation](#installation)
+    - [Import Package](#import-package)
   - [Usage](#usage)
     - [Import Package](#import-package)
   - [Roadmap](#roadmap)
@@ -20,53 +21,39 @@ Note that this project is still in its early stages and so may not yet provide c
   - [Acknowledgments](#acknowledgments)
   - [Limitation of Liability](#limitation-of-liability)
 
-
-
 ## About The Project
 
-To do: add more info about package here
+The Commons Configuration software library provides a generic configuration interface which enables a Dart/Flutter application to read configuration data from a variety of sources. Commons Configuration provides typed access to single, and multi-valued configuration parameters as demonstrated by the following code:
+
+```Dart
+double d = config.getDouble("number");
+int i = config.getInt("number");
+```
 
 ### Features
-
+To do: list the features
 
 ## Getting Started
 
-To do: describe how to get started
-
-### Prerequisites
-
-Needs Dart SDK 3.4.3
+Add the package as a dependency.
 
 ### Installation
+Add the package to your dependencies.
 
 ```
 pub add commons_config
 ```
 
-
-## Usage
-
 ### Import Package
-Import library
+
+Import the library in your code.
+
 ```Dart
 import 'package:commons_config/commons_config.dart';
 ```
 
-Create a Properties instance
-```Dart
-Properties properties = Properties();
-```
-
-Load the properties from a file
-```Dart
-properties.loadSync(File('loggin.props'));
-```
-
-Read a property with the getProperty method
-```Dart
-print(properties.getProperty('rootLogger'));
-```
-
+## Usage
+See the [User Guide](docs/user-guide.md) for detailed information.
 
 ## Roadmap
 

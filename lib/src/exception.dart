@@ -21,3 +21,12 @@ class ConversionException implements Exception {
   /// Create a new instance with the given cause.
   ConversionException(this.cause);
 }
+
+/// Exception thrown when a property is not found.
+class NoSuchElementException implements Exception {
+  /// The cause of the exception.
+  String cause;
+
+  /// Create a new instance with the given cause.
+  NoSuchElementException(this.cause);
+}
