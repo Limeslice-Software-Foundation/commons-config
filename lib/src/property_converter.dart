@@ -29,6 +29,24 @@ class PropertyConverter {
   /// Create a new instance.
   PropertyConverter._internal();
 
+  /// Convert the specified object into a BigInt.
+  /// Throws ConversionException if the value cannot be converted.
+  BigInt toBigInt(Object? value) {
+    if (value is BigInt) {
+      return value;
+    } else if (value is String) {
+      BigInt? d = BigInt.tryParse(value);
+      if (d == null) {
+        throw ConversionException(
+            "The value $value can't be converted to a BigInt");
+      }
+      return d;
+    } else {
+      throw ConversionException(
+          "The value $value can't be converted to a BigInt");
+    }
+  }
+
   /// Convert the specified object into a bool.
   /// Throws ConversionException if the value cannot be converted.
   bool toBool(Object? value) {
@@ -45,7 +63,7 @@ class PropertyConverter {
 
   /// Convert the specified object into a DateTime.
   /// Throws ConversionException if the value cannot be converted.
-  DateTime toDateTime(Object value) {
+  DateTime toDateTime(Object? value) {
     if (value is DateTime) {
       return value;
     } else if (value is String) {
@@ -63,7 +81,7 @@ class PropertyConverter {
 
   /// Convert the specified object into a int.
   /// Throws ConversionException if the value cannot be converted.
-  int toInt(Object value) {
+  int toInt(Object? value) {
     if (value is int) {
       return value;
     } else if (value is String) {
@@ -80,7 +98,7 @@ class PropertyConverter {
 
   /// Convert the specified object into a int.
   /// Throws ConversionException if the value cannot be converted.
-  double toDouble(Object value) {
+  double toDouble(Object? value) {
     if (value is double) {
       return value;
     } else if (value is String) {
@@ -98,7 +116,7 @@ class PropertyConverter {
 
   /// Convert the specified object into a Uri.
   /// Throws ConversionException if the value cannot be converted.
-  Uri toUri(Object value) {
+  Uri toUri(Object? value) {
     if (value is Uri) {
       return value;
     } else if (value is String) {
@@ -114,7 +132,7 @@ class PropertyConverter {
   }
 
   /// Returns an iterator over the simple values of a composite value.
-  Iterator toIterator(Object value, String delimiter) {
+  Iterator toIterator(Object? value, String delimiter) {
     return _flatten(value, delimiter).iterator;
   }
 
@@ -128,7 +146,7 @@ class PropertyConverter {
   /// corresponding {@code Iterator} is obtained, and contained elements
   /// are added to the resulting collection.
   /// 3. All other types are directly inserted.
-  List _flatten(Object value, String delimiter) {
+  List _flatten(Object? value, String delimiter) {
     if (value is String) {
       String s = value;
       if (s.contains(delimiter)) {
@@ -141,7 +159,7 @@ class PropertyConverter {
       _flattenIterator(result, value.iterator, delimiter);
     } else if (value is Iterator) {
       _flattenIterator(result, value, delimiter);
-    } else {
+    } else if (value != null) {
       result.add(value);
     }
 

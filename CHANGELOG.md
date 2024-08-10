@@ -1,3 +1,9 @@
+## 0.0.6
+- Add Configuration base class.
+- Add MapConfiguration class.
+- Add ConfigurationInterpolator class.
+- Add EnvStrLookup class.
+
 ## 0.0.5
 - Add PropertyConvertor class.
 - Changed license to MIT license.
