@@ -24,12 +24,12 @@ void main() {
     iterator = PrefixedKeysIterator(iterator: list.iterator, prefix: 'test');
 
     expect(iterator.moveNext(), equals(false));
-    expect(() => iterator.current,
-          throwsA(TypeMatcher<NoSuchElementException>()));
+    expect(
+        () => iterator.current, throwsA(TypeMatcher<NoSuchElementException>()));
   });
 
   test('Test all prefix', () {
-    List<String> list = ['test.1','test.2'];
+    List<String> list = ['test.1', 'test.2'];
     iterator = PrefixedKeysIterator(iterator: list.iterator, prefix: 'test');
 
     expect(iterator.moveNext(), equals(true));
@@ -40,7 +40,7 @@ void main() {
   });
 
   test('Test some prefix', () {
-    List<String> list = ['test.1','abc.2','test.3'];
+    List<String> list = ['test.1', 'abc.2', 'test.3'];
     iterator = PrefixedKeysIterator(iterator: list.iterator, prefix: 'test');
 
     expect(iterator.moveNext(), equals(true));
@@ -49,5 +49,4 @@ void main() {
     expect(iterator.current, equals(list[2]));
     expect(iterator.moveNext(), equals(false));
   });
-
 }

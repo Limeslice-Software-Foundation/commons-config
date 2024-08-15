@@ -149,7 +149,7 @@ class PropertyConverter {
   List _flatten(Object? value, String delimiter) {
     if (value is String) {
       String s = value;
-      if (s.contains(delimiter)) {
+      if (s.contains(delimiter) && delimiter.isNotEmpty) {
         return s.split(delimiter);
       }
     }

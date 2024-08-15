@@ -16,7 +16,9 @@ import 'package:commons_lang/commons_lang.dart';
 
 import 'exception.dart';
 import 'interpol/config_interpolator.dart';
+import 'prefixed_keys_iterator.dart';
 import 'property_converter.dart';
+import 'subset_configuration.dart';
 
 /// Abstract configuration class. Provides basic functionality but does not
 /// store any data.
@@ -43,15 +45,15 @@ abstract class Configuration {
   static final String defaultListDelimiter = ',';
 
   /// Delimiter used to convert single values to lists.
-  String listDelimiter = defaultListDelimiter;
+  String _listDelimiter = defaultListDelimiter;
 
   /// When set to true the given configuration delimiter will not be used
   /// while parsing for this configuration.
-  bool delimiterParsingDisabled = false;
+  bool _delimiterParsingDisabled = false;
 
   /// Whether the configuration should throw exceptions or simply
   /// return null when a property does not exist. Defaults to return null.
-  bool throwExceptionOnMissing = false;
+  bool _throwExceptionOnMissing = false;
 
   /// Stores a reference to the object that handles variable interpolation.
   StrSubstitutor? _substitutor;
@@ -75,7 +77,7 @@ abstract class Configuration {
   void addPropertyDirect(String key, Object value);
 
   /// Removes the specified property from this configuration. This method is
-  /// called by {@code clearProperty()} after it has done some
+  /// called by <code>clearProperty()</code> after it has done some
   /// preparations. It should be overridden in sub classes.
   void clearPropertyDirect(String key);
 
@@ -88,6 +90,47 @@ abstract class Configuration {
   /// Get the list of the keys contained in the configuration. The returned
   /// iterator can be used to obtain all defined keys.
   Iterator<String> getKeys();
+
+  //---------------------------------------------------------------------------
+
+  //---------------------------------------------------------------------------
+  // Getters and setters
+  //---------------------------------------------------------------------------
+  // These are defined as getters and setters so that the functionality may be
+  // overridden in subclasses that may want to change the default behaviour.
+
+  /// Returns the delimiter used to convert single values to lists.
+  String get listDelimiter {
+    return _listDelimiter;
+  }
+
+  /// Returns true if the given configuration delimiter will not be used
+  /// while parsing for this configuration, false otherwise.
+  bool get delimiterParsingDisabled {
+    return _delimiterParsingDisabled;
+  }
+
+  /// Returns true if the configuration should throw exceptions or simply
+  /// return null when a property does not exist.
+  bool get throwExceptionOnMissing {
+    return _throwExceptionOnMissing;
+  }
+
+  /// Set the delimiter used to convert single values to lists.
+  set listDelimiter(String listDelimiter) {
+    _listDelimiter = listDelimiter;
+  }
+
+  /// Set whether the configuration delimiter will be used while parsing.
+  set delimiterParsingDisabled(bool delimiterParsingDisabled) {
+    _delimiterParsingDisabled = delimiterParsingDisabled;
+  }
+
+  /// Set whether the configuration should throw exceptions when a property
+  /// does no exist.
+  set throwExceptionOnMissing(bool throwExceptionOnMissing) {
+    _throwExceptionOnMissing = throwExceptionOnMissing;
+  }
 
   //---------------------------------------------------------------------------
 
@@ -124,9 +167,13 @@ abstract class Configuration {
 
   /// Remove all properties from the configuration.
   void clear() {
+    List<String> toRemove = [];
     Iterator<String> it = getKeys();
     while (it.moveNext()) {
       String key = it.current;
+      toRemove.add(key);
+    }
+    for (String key in toRemove) {
       clearProperty(key);
     }
   }
@@ -137,12 +184,35 @@ abstract class Configuration {
     return _substitutor!;
   }
 
+  /// Returns the <code>ConfigurationInterpolator</code> object that manages
+  /// the lookup objects for resolving variables.
+  ConfigurationInterpolator get getInterpolator {
+    StrLookup lookup = getSubstitutor.variableResolver;
+    if (lookup is ConfigurationInterpolator) {
+      return lookup;
+    }
+    return _createInterpolator();
+  }
+
   /// Returns the interpolated value. Non String values are returned without change.
   Object? interpolate(Object? source) {
     if (source is String) {
       return getSubstitutor.replace(source);
     }
     return source;
+  }
+
+  /// This implementation returns keys that either match the
+  /// prefix or start with the prefix followed by a dot ('.').
+  Iterator<String> getKeysPrefixed(String prefix) {
+    return PrefixedKeysIterator(iterator: getKeys(), prefix: prefix);
+  }
+
+  /// Return a decorator Configuration containing every key from the current
+  /// Configuration that starts with the specified prefix. The prefix is
+  /// removed from the keys in the subset.
+  Configuration subset(String prefix) {
+    return SubsetConfiguration.fromConfiguration(this, prefix);
   }
 
   //---------------------------------------------------------------------------
@@ -380,7 +450,7 @@ abstract class Configuration {
   }
 
   //---------------------------------------------------------------------------
-  // Provate methods.
+  // Private methods.
   //---------------------------------------------------------------------------
 
   /// Creates the interpolator object that is responsible for variable

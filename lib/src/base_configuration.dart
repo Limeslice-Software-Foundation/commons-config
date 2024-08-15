@@ -12,19 +12,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'map_configuration.dart';
 
-/// The Commons Configuration software library provides a generic
-/// configuration interface which enables a Dart/Flutter application
-/// to read configuration data from a variety of sources.
-library;
-
-export 'src/properties/properties.dart';
-export 'src/exception.dart';
-export 'src/property_converter.dart';
-export 'src/lookup/env_str_lookup.dart';
-export 'src/interpol/config_interpolator.dart';
-export 'src/configuration.dart';
-export 'src/map_configuration.dart';
-export 'src/prefixed_keys_iterator.dart';
-export 'src/subset_configuration.dart';
-export 'src/base_configuration.dart';
+/// Provides a basic Configuration implementation that is backed by a map.
+class BaseConfiguration extends MapConfiguration {
+  BaseConfiguration() : super(map: {});
+}
