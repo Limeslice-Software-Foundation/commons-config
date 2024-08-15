@@ -87,6 +87,11 @@ class ConfigurationInterpolator extends StrLookup {
     localLookups.remove(prefix);
   }
 
+  /// Registers the local lookup instances for the given interpolator.
+  void registerLocalLookups(ConfigurationInterpolator interpolator) {
+    interpolator.localLookups.addAll(localLookups);
+  }
+
   /// The set of prefix keys
   Iterable<String> prefixSet() {
     return localLookups.keys;

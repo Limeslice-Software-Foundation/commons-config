@@ -17,7 +17,7 @@ import 'exception.dart';
 /// A specialized iterator implementation used by
 /// <code>AbstractConfiguration</code> to return an iteration over all keys
 /// starting with a specified prefix.
-class PrefixedKeysIterator implements Iterator {
+class PrefixedKeysIterator implements Iterator<String> {
   /// Stores the wrapped iterator.
   final Iterator<String> iterator;
 
@@ -36,11 +36,11 @@ class PrefixedKeysIterator implements Iterator {
 
   /// Returns the current element in the iteration.
   @override
-  String? get current {
+  String get current {
     if (!_elementSet) {
       throw NoSuchElementException('Element not found in iterator');
     }
-    return _currentElement;
+    return _currentElement!;
   }
 
   /// Advances the iterator to the next element of the iteration.
