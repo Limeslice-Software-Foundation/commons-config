@@ -16,6 +16,9 @@
 import 'package:commons_config/commons_config.dart';
 import 'package:test/test.dart';
 
+const int propCount = 12;
+const String keyPrefix = 'key';
+
 void main() {
   late Configuration configuration;
 
@@ -87,7 +90,7 @@ void main() {
       String expected = "1";
       String key = "number";
       configuration.setProperty(key, expected);
-      expect(configuration.getProperty(key), equals([expected]));
+      expect(configuration.getProperty(key), equals(expected));
       expect(configuration.getString('number'), equals('1'));
     });
 
@@ -276,12 +279,12 @@ void main() {
       expect(list[0], equals("hey"));
     });
 
-    // test('Test comma separated string escaped', () {
-    //   String prop2 = "hey\\, that's a test";
-    //   configuration.setProperty("prop.string", prop2);
-    //   expect(
-    //       configuration.getString("prop.string"), equals("hey, that's a test"));
-    // });
+    test('Test comma separated string escaped', () {
+      String prop2 = "hey\\, that's a test";
+      configuration.setProperty("prop.string", prop2);
+      expect(
+          configuration.getString("prop.string"), equals("hey, that's a test"));
+    });
 
     test('Test add property', () {
       List<Object> props = ["one", "two,three,four"];
@@ -294,6 +297,69 @@ void main() {
       if (val is List) {
         expect(val.length, equals(10));
       }
+    });
+
+    Configuration setUpSourceConfig() {
+      BaseConfiguration config = BaseConfiguration();
+      for (int i = 1; i < propCount; i += 2) {
+        config.addProperty('$keyPrefix$i', "src$i");
+      }
+      config.addProperty("list1", "1,2,3");
+      config.addProperty("list2", "3\\,1415,9\\,81");
+      return config;
+    }
+
+    Configuration setUpDestConfig() {
+      BaseConfiguration config = BaseConfiguration();
+      for (int i = 0; i < propCount; i++) {
+        config.addProperty('$keyPrefix$i', "value$i");
+      }
+      return config;
+    }
+
+    test('Test configuration copy', () {
+      Configuration srcConfig = setUpSourceConfig();
+      Configuration config = setUpDestConfig();
+      config.copy(srcConfig);
+      for (int i = 0; i < propCount; i++) {
+        String key = '$keyPrefix$i';
+        if (srcConfig.containsKey(key)) {
+          expect(srcConfig.getProperty(key), equals(config.getProperty(key)));
+        } else {
+          expect(config.getString(key), equals('value$i'));
+        }
+      }
+    });
+
+    test('Test copy with lists', () {
+      Configuration srcConfig = setUpSourceConfig();
+      Configuration config = setUpDestConfig();
+      config.copy(srcConfig);
+      List<Object?> values = config.getList("list1");
+      expect(values.length, equals(3));
+      values = config.getList("list2");
+      expect(values.length, equals(2));
+      expect(values[0], equals('3,1415'));
+    });
+
+    test('Test interpolated configuration', () {
+      configuration.setProperty("applicationRoot", "/home/applicationRoot");
+      configuration.setProperty("db", "\${applicationRoot}/db/hypersonic");
+      configuration.setProperty("inttest.interpol", "\${unknown.property}");
+      configuration.setProperty("inttest.numvalue", "3\\,1415");
+      configuration.setProperty("inttest.value", "\${inttest.numvalue}");
+      configuration.setProperty("inttest.list", "\${db}");
+      configuration.addProperty("inttest.list", "\${inttest.value}");
+
+      Configuration c = configuration.interpolatedConfiguration();
+      expect(
+          c.getProperty("db"), equals("/home/applicationRoot/db/hypersonic"));
+      expect(c.getProperty("inttest.value"), equals("3,1415"));
+      List<Object?> list = c.getList('inttest.list');
+      expect(list.length, equals(2));
+      expect(list[0], equals("/home/applicationRoot/db/hypersonic"));
+      expect(list[1], equals("3,1415"));
+      expect(c.getProperty("inttest.interpol"), equals("\${unknown.property}"));
     });
   });
 }

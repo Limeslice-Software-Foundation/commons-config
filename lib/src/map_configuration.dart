@@ -62,16 +62,19 @@ class MapConfiguration extends Configuration {
   /// Gets a property from the configuration.
   @override
   Object? getProperty(String? key) {
-    Object? value = map[key];
-    if (value is String && !super.delimiterParsingDisabled) {
-      return value.split(super.listDelimiter);
-    }
-    return value;
+    return map[key];
   }
 
   /// Check if the configuration is empty.
   @override
   bool isEmpty() {
     return map.isEmpty;
+  }
+
+  @override
+  Configuration clone() {
+    Map<String, Object?> newMap = {};
+    newMap.addAll(map);
+    return MapConfiguration(map: newMap);
   }
 }
