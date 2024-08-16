@@ -340,6 +340,7 @@ void main() {
       values = config.getList("list2");
       expect(values.length, equals(2));
       expect(values[0], equals('3,1415'));
+      expect(values[1], equals('9,81'));
     });
 
     test('Test interpolated configuration', () {
@@ -394,6 +395,34 @@ void main() {
       Configuration config2 = configuration.clone();
       config2.addProperty(key, "value3");
       expect(configuration.getList(key).length, equals(2));
+    });
+
+    test('Test append', () {
+      Configuration config = setUpDestConfig();
+      Configuration srcConfig = setUpSourceConfig();
+      config.append(srcConfig);
+      for (int i = 0; i < propCount; i++) {
+        String key = '$keyPrefix$i';
+        if (srcConfig.containsKey(key)) {
+          List<Object?> values = config.getList(key);
+          expect(values.length, equals(2));
+          expect(values[0], equals('value$i'));
+          expect(values[1], equals('src$i'));
+        } else {
+          expect(config.getProperty(key), equals('value$i'));
+        }
+      }
+    });
+
+    test('Test append with lists', () {
+      Configuration config = setUpDestConfig();
+      config.append(setUpSourceConfig());
+      List<Object?> values = config.getList("list1");
+      expect(values.length, equals(3));
+      values = config.getList("list2");
+      expect(values.length, equals(2));
+      expect(values[0], equals('3,1415'));
+      expect(values[1], equals('9,81'));
     });
   });
 }

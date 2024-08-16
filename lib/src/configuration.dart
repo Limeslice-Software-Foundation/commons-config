@@ -238,6 +238,19 @@ abstract class Configuration {
     }
   }
 
+  /// Appends the content of the specified configuration to this configuration.
+  /// The values of all properties contained in the specified configuration
+  /// will be appended to this configuration. So if a property is already
+  /// present in this configuration, its new value will be a union of the
+  /// values in both configurations.
+  void append(Configuration c) {
+    for (Iterator<String> it = c.getKeys(); it.moveNext();) {
+      String key = it.current;
+      Object? value = c.getProperty(key);
+      addPropertyValues(key, value, disabledDelimiter);
+    }
+  }
+
   /// Returns a configuration with the same content as this configuration, but
   /// with all variables replaced by their actual values. This method tries to
   /// clone the configuration and then perform interpolation on all properties.
