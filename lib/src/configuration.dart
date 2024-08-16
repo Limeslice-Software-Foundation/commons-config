@@ -44,6 +44,10 @@ abstract class Configuration {
   /// The default value for listDelimiter.
   static final String defaultListDelimiter = ',';
 
+  /// Constant for the disabled list delimiter. This String is passed to the
+  /// list parsing methods if delimiter parsing is disabled.
+  static final String disabledDelimiter = '';
+
   /// Delimiter used to convert single values to lists.
   String _listDelimiter = defaultListDelimiter;
 
@@ -90,6 +94,10 @@ abstract class Configuration {
   /// Get the list of the keys contained in the configuration. The returned
   /// iterator can be used to obtain all defined keys.
   Iterator<String> getKeys();
+
+  /// Concerete subclasses should implement a clone method that performs a
+  /// "deep" copy as appropriate for the specific implementation.
+  Configuration clone();
 
   //---------------------------------------------------------------------------
 
@@ -145,7 +153,7 @@ abstract class Configuration {
   /// single values and containers (e.g. Iterable) as well. In the
   /// latter case, <code>addPropertyDirect()</code> will be called for each
   /// element.
-  void addPropertyValues(String key, Object value, String delimiter) {
+  void addPropertyValues(String key, Object? value, String delimiter) {
     Iterator it = PropertyConverter().toIterator(value, delimiter);
     while (it.moveNext()) {
       addPropertyDirect(key, it.current);
@@ -213,6 +221,40 @@ abstract class Configuration {
   /// removed from the keys in the subset.
   Configuration subset(String prefix) {
     return SubsetConfiguration.fromConfiguration(this, prefix);
+  }
+
+  /// Copies the content of the given configuration into this
+  /// configuration. If the specified configuration contains a key that is also
+  /// present in this configuration, the value of this key will be replaced by
+  /// the new value.
+  /// <em>Note:</em> Subclasses should override this method as and where
+  /// appropriate, eg HierarchicalConfiguration
+  void copy(Configuration config) {
+    for (Iterator<String> it = config.getKeys(); it.moveNext();) {
+      String key = it.current;
+      Object? value = config.getProperty(key);
+      clearProperty(key);
+      addPropertyValues(key, value, disabledDelimiter);
+    }
+  }
+
+  /// Returns a configuration with the same content as this configuration, but
+  /// with all variables replaced by their actual values. This method tries to
+  /// clone the configuration and then perform interpolation on all properties.
+  /// So property values of the form <code>${var}</code> will be resolved as
+  /// far as possible (if a variable cannot be resolved, it remains unchanged).
+  /// This operation is useful if the content of a configuration is to be
+  /// exported or processed by an external component that does not support
+  /// variable interpolation.
+  Configuration interpolatedConfiguration() {
+    Configuration c = clone();
+    c._delimiterParsingDisabled = true;
+    for (Iterator<String> it = getKeys(); it.moveNext();) {
+      String key = it.current;
+      c.setProperty(key, getList(key));
+    }
+    c._delimiterParsingDisabled = _delimiterParsingDisabled;
+    return c;
   }
 
   //---------------------------------------------------------------------------

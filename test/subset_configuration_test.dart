@@ -39,12 +39,12 @@ void main() {
     Configuration subset = conf.subset("test");
 
     subset.setProperty("key1", "value1");
-    expect(subset.getProperty("key1"), equals(["value1"]));
-    expect(conf.getProperty("test.key1"), equals(["value1"]));
+    expect(subset.getProperty("key1"), equals("value1"));
+    expect(conf.getProperty("test.key1"), equals("value1"));
 
     conf.setProperty("test.key2", "value2");
-    expect(subset.getProperty("key2"), equals(["value2"]));
-    expect(conf.getProperty("test.key2"), equals(["value2"]));
+    expect(subset.getProperty("key2"), equals("value2"));
+    expect(conf.getProperty("test.key2"), equals("value2"));
   });
 
   test('Test get parent key', () {

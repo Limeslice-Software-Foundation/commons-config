@@ -18,6 +18,8 @@ import 'package:commons_lang/commons_lang.dart';
 
 /// A utility class to convert the configuration properties into any type.
 class PropertyConverter {
+  static final String listEscChar = '\\';
+
   /// Singleton instance
   static final PropertyConverter instance = PropertyConverter._internal();
 
@@ -150,7 +152,7 @@ class PropertyConverter {
     if (value is String) {
       String s = value;
       if (s.contains(delimiter) && delimiter.isNotEmpty) {
-        return s.split(delimiter);
+        return split(s, delimiter);
       }
     }
 
@@ -172,5 +174,57 @@ class PropertyConverter {
     while (it.moveNext()) {
       target.addAll(_flatten(it.current, delimiter));
     }
+  }
+
+  List<String> split(String str, String delimiter, [bool trim = true]) {
+    if (str.isEmpty) {
+      return [];
+    }
+
+    List<String> list = [];
+    StringBuffer token = StringBuffer();
+    StrBuilder s = StrBuilder(value: str);
+    int begin = 0;
+    bool inEscape = false;
+
+    while (begin < s.length()) {
+      String c = s.charAt(begin);
+      if (inEscape) {
+        // last character was the escape marker
+        // can current character be escaped?
+        if (c != delimiter && c != listEscChar) {
+          // no, also add escape character
+          token.write(listEscChar);
+        }
+        token.write(c);
+        inEscape = false;
+      } else {
+        if (c == delimiter) {
+          // found a list delimiter -> add token and resetDefaultFileSystem buffer
+          String t = token.toString();
+          if (trim) {
+            t = t.trim();
+          }
+          list.add(t);
+          token = StringBuffer();
+        } else if (c == listEscChar) {
+          // eventually escape next character
+          inEscape = true;
+        } else {
+          token.write(c);
+        }
+      }
+      begin++;
+    }
+    if (inEscape) {
+      token.write(listEscChar);
+    }
+    // Add last token
+    String t = token.toString();
+    if (trim) {
+      t = t.trim();
+    }
+    list.add(t);
+    return list;
   }
 }

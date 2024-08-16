@@ -12,6 +12,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'package:deepcopy/deepcopy.dart';
+
 import 'configuration.dart';
 
 /// Provides a <code>Configuration</code> implementation backed by a
@@ -62,16 +64,18 @@ class MapConfiguration extends Configuration {
   /// Gets a property from the configuration.
   @override
   Object? getProperty(String? key) {
-    Object? value = map[key];
-    if (value is String && !super.delimiterParsingDisabled) {
-      return value.split(super.listDelimiter);
-    }
-    return value;
+    return map[key];
   }
 
   /// Check if the configuration is empty.
   @override
   bool isEmpty() {
     return map.isEmpty;
+  }
+
+  @override
+  Configuration clone() {
+    Map<String, Object?> newMap = map.deepcopy().cast<String, Object?>();
+    return MapConfiguration(map: newMap);
   }
 }

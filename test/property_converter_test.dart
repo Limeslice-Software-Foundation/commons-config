@@ -17,6 +17,34 @@ import 'package:commons_config/commons_config.dart';
 import 'package:test/test.dart';
 
 void main() {
+  group('Split group', () {
+    test('Test split', () {
+      String s = "abc, xyz , 123";
+      List<String> list = PropertyConverter().split(s, ',');
+      expect(list.length, equals(3));
+      expect(list[0], equals('abc'));
+      expect(list[1], equals('xyz'));
+      expect(list[2], equals('123'));
+    });
+
+    test('Test split not trim', () {
+      String s = "abc, xyz , 123";
+      List<String> list = PropertyConverter().split(s, ',', false);
+      expect(list.length, equals(3));
+      expect(list[0], equals('abc'));
+      expect(list[1], equals(' xyz '));
+      expect(list[2], equals(' 123'));
+    });
+
+    test('Test split with escaped character', () {
+      String s = "abc\\,xyz, 123";
+      List<String> list = PropertyConverter().split(s, ',');
+      expect(list.length, equals(2));
+      expect(list[0], equals('abc,xyz'));
+      expect(list[1], equals('123'));
+    });
+  });
+
   group('Test toBool', () {
     test('toBool from bool', () {
       bool expected = true;

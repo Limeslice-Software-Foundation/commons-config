@@ -12,6 +12,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 import 'configuration.dart';
 import 'interpol/config_interpolator.dart';
 
@@ -47,6 +48,13 @@ class SubsetConfiguration extends Configuration {
       subsetConf.delimiter = delimiter;
     }
     return subsetConf;
+  }
+
+  /// Clone this configuration as appropriate.
+  @override
+  Configuration clone() {
+    return SubsetConfiguration.fromConfiguration(
+        parent.clone(), prefix, delimiter);
   }
 
   /// Return the key in the parent configuration associated to the specified
