@@ -361,5 +361,39 @@ void main() {
       expect(list[1], equals("3,1415"));
       expect(c.getProperty("inttest.interpol"), equals("\${unknown.property}"));
     });
+
+    test('Test clone', () {
+      for (int i = 0; i < 10; i++) {
+        configuration.addProperty("key$i", i);
+      }
+      Configuration config2 = configuration.clone();
+
+      for (Iterator<String> it = configuration.getKeys(); it.moveNext();) {
+        String key = it.current;
+        expect(config2.containsKey(key), equals(true));
+        expect(
+            config2.getProperty(key), equals(configuration.getProperty(key)));
+      }
+    });
+
+    test('Test clone modify', () {
+      configuration.addProperty("original", true);
+      Configuration config2 = configuration.clone();
+
+      config2.addProperty("clone", true);
+      expect(configuration.containsKey('clone'), equals(false));
+      config2.setProperty("original", false);
+      expect(configuration.getBool('original'), equals(true));
+      expect(config2.getBool('original'), equals(false));
+    });
+
+    test('Test clone list', () {
+      final String key = "list";
+      configuration.addProperty(key, "value1");
+      configuration.addProperty(key, "value2");
+      Configuration config2 = configuration.clone();
+      config2.addProperty(key, "value3");
+      expect(configuration.getList(key).length, equals(2));
+    });
   });
 }
