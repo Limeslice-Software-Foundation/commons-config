@@ -30,3 +30,12 @@ class NoSuchElementException implements Exception {
   /// Create a new instance with the given cause.
   NoSuchElementException(this.cause);
 }
+
+/// General configuration exception.
+class ConfigurationException implements Exception {
+  /// The cause of the exception.
+  String cause;
+
+  /// Create a new instance with the given cause.
+  ConfigurationException(this.cause);
+}

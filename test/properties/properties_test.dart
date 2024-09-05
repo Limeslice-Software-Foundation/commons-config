@@ -18,12 +18,23 @@ import 'package:commons_config/commons_config.dart';
 import 'package:test/test.dart';
 
 void main() {
+  final File file = File('test.props');
   late Properties properties;
 
   setUp(() {
     properties = Properties();
     properties.setProperty('key1', 'value1');
     properties.setProperty('key2', 'value2');
+  });
+
+  tearDownAll(() {
+    if (file.existsSync()) {
+      try {
+        file.deleteSync();
+      } catch (ex) {
+        print('Failed to delete test file: $file - $ex');
+      }
+    }
   });
 
   test('Convert properties to a String', () {
@@ -105,21 +116,14 @@ void main() {
   group('Test load and save properties', () {
     test('Load properties from file.', () {
       properties.clear();
-      File file = File('test/data/logging.props');
+      File file = File('test/data/test.properties');
       properties.loadSync(file);
 
-      expect(properties.getProperty('log4delphi.rootLogger'),
-          equals('DEBUG, fileAppender'));
-      expect(properties.getBool('log4delphi.debug'), equals(true));
-      expect(properties.getProperty('log4delphi.appender.fileAppender'),
-          equals('TRollingFileAppender'));
-      expect(
-          properties.getInt('log4delphi.appender.fileAppender.MaxBackupIndex'),
-          equals(3));
+      expect(properties.getProperty('packages'),equals('packagea'));
+      expect(properties.getBool('configuration.loaded'), equals(true));
     });
 
     test('Save properties to file.', () {
-      File file = File('test.props');
       properties.save(file);
     });
   });

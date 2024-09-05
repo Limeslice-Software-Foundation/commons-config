@@ -12,8 +12,9 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-import 'dart:collection';
 import 'dart:io';
+import 'package:commons_lang/commons_lang.dart';
+import 'package:deepcopy/deepcopy.dart';
 
 /// Represents a set of key value pairs that can be saved to or read from file.
 /// Each key and value is a String.
@@ -24,10 +25,21 @@ class Properties {
   static final int _delimStartLen = 2;
   static final int _delimStopLen = 1;
 
-  final LinkedHashMap<String, String> _map;
+  static final String defaultSeparator = '=';
+  static final String commentChars = '#!';
+  static final String include = 'include';
+
+  bool includesAllowed = true;
+  String separator = defaultSeparator;
+
+  final Map<String, String> _map;
 
   /// Create a new empty set of properties.
-  Properties() : _map = LinkedHashMap();
+  factory Properties() {
+    return Properties._internal({});
+  }
+
+  Properties._internal(Map<String, String> map) : _map = map;
 
   String? getProperty(String key, [String? defaultValue]) {
     return _map[key] ?? defaultValue;
@@ -58,6 +70,14 @@ class Properties {
     return _map.isEmpty;
   }
 
+  bool containsKey(String key) {
+    return _map.containsKey(key);
+  }
+
+  Iterator<String> getKeys() {
+    return _map.keys.iterator;
+  }
+
   /// Return a string representation of this set of properties. Each property
   /// appears on a separate line in the form key=value.
   @override
@@ -70,9 +90,10 @@ class Properties {
   }
 
   void _loadFromLines(List<String> lines) {
-    for (String line in lines) {
-      if (line.trim().isNotEmpty && !line.trim().startsWith('#')) {
-        List<String> tokens = line.trim().split('=');
+    for (String l in lines) {
+      String line = l.trim();
+      if(line.isNotEmpty && !_isCommentLine(line)) {
+        List<String> tokens = StringUtils.split(line, '=:');
         if (tokens.length == 1) {
           _map[tokens[0]] = '';
         } else if (tokens.length > 1) {
@@ -220,5 +241,30 @@ class Properties {
         }
       }
     }
+  }
+
+  Properties clone() {
+    return Properties._internal(_map.deepcopy().cast<String, String>());
+  }
+
+  bool _isCommentLine(String line) {
+    StrBuilder builder = StrBuilder(value: line);
+    return builder.isEmpty || commentChars.contains(builder.charAt(0));
+  }
+
+  bool _checkCombineLines(String line) {
+    return _countTrailingBS(line) % 2 != 0;
+  }
+
+  int _countTrailingBS(String line) {
+    StrBuilder builder = StrBuilder(value: line);
+    int bsCount = 0;
+    for (int idx = builder.length() - 1;
+        idx >= 0 && builder.charAt(idx) == '\\';
+        idx--) {
+      bsCount++;
+    }
+
+    return bsCount;
   }
 }

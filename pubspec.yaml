@@ -9,7 +9,7 @@ environment:
   sdk: ^3.4.3
 
 dependencies:
-  commons_lang: ^0.0.5
+  commons_lang: ^0.0.7
   deepcopy: ^1.1.2
 
 dev_dependencies:
