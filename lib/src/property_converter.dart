@@ -18,7 +18,6 @@ import 'package:commons_lang/commons_lang.dart';
 
 /// A utility class to convert the configuration properties into any type.
 class PropertyConverter {
-
   /// Singleton instance
   static final PropertyConverter instance = PropertyConverter._internal();
 

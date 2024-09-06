@@ -12,9 +12,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+import 'dart:collection';
 import 'dart:io';
-import 'package:commons_lang/commons_lang.dart';
-import 'package:deepcopy/deepcopy.dart';
 
 /// Represents a set of key value pairs that can be saved to or read from file.
 /// Each key and value is a String.
@@ -25,21 +24,10 @@ class Properties {
   static final int _delimStartLen = 2;
   static final int _delimStopLen = 1;
 
-  static final String defaultSeparator = '=';
-  static final String commentChars = '#!';
-  static final String include = 'include';
-
-  bool includesAllowed = true;
-  String separator = defaultSeparator;
-
-  final Map<String, String> _map;
+  final LinkedHashMap<String, String> _map;
 
   /// Create a new empty set of properties.
-  factory Properties() {
-    return Properties._internal({});
-  }
-
-  Properties._internal(Map<String, String> map) : _map = map;
+  Properties() : _map = LinkedHashMap();
 
   String? getProperty(String key, [String? defaultValue]) {
     return _map[key] ?? defaultValue;
@@ -70,14 +58,6 @@ class Properties {
     return _map.isEmpty;
   }
 
-  bool containsKey(String key) {
-    return _map.containsKey(key);
-  }
-
-  Iterator<String> getKeys() {
-    return _map.keys.iterator;
-  }
-
   /// Return a string representation of this set of properties. Each property
   /// appears on a separate line in the form key=value.
   @override
@@ -89,47 +69,29 @@ class Properties {
     return result;
   }
 
-  void _loadFromLines(List<String> lines, File file) {
-    for (String l in lines) {
-      String line = l.trim();
-      if (line.isNotEmpty && !_isCommentLine(line)) {
-        List<String> tokens = StringUtils.split(line, '=:');
+  void _loadFromLines(List<String> lines) {
+    for (String line in lines) {
+      if (line.trim().isNotEmpty && !line.trim().startsWith('#')) {
+        List<String> tokens = line.trim().split('=');
         if (tokens.length == 1) {
           _map[tokens[0]] = '';
         } else if (tokens.length > 1) {
-          if (tokens[0].trim() == 'include') {
-            _include(tokens, file);
-          } else {
-            _map[tokens[0]] = tokens[1];
-          }
+          _map[tokens[0].trim()] = tokens[1].trim();
         }
       }
     }
   }
 
-  void _include(List<String> tokens, File file) {
-    String filename = tokens[1].trim();
-    if (filename.contains('\${')) {
-      filename = filename.substring(_delimStartLen, filename.length-1);
-      filename = findAndSubstitute(filename);
-    }
-    loadSync(File('${file.parent.path}${Platform.pathSeparator}$filename'));
-  }
-
-  List<String> _getLines(String content) {
-    return StringUtils.split(content, '\n', true, '\\');
-  }
-
   /// Load the set of properties synchronously from the file.
   void loadSync(File file) {
-    String fileContent = file.readAsStringSync();
-    _loadFromLines(_getLines(fileContent), file);
+    List<String> lines = file.readAsLinesSync();
+    _loadFromLines(lines);
   }
 
   /// Load the set of propertis asynchronously from the file.
   Future<void> load(File file) async {
-    String fileContent = await file.readAsString();
-    _loadFromLines(_getLines(fileContent), file);
+    List<String> lines = await file.readAsLines();
+    _loadFromLines(lines);
   }
 
   /// Save the set of properties synchronously to the file.
@@ -258,14 +220,5 @@ class Properties {
         }
       }
     }
-  }
-
-  Properties clone() {
-    return Properties._internal(_map.deepcopy().cast<String, String>());
-  }
-
-  bool _isCommentLine(String line) {
-    StrBuilder builder = StrBuilder(value: line.trim());
-    return builder.isEmpty || commentChars.contains(builder.charAt(0));
   }
 }

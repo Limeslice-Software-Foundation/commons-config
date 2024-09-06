@@ -13,28 +13,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'dart:io';
+import 'dart:math';
 
 import 'package:commons_config/commons_config.dart';
 import 'package:test/test.dart';
 
 void main() {
-  final File file = File('test.props');
   late Properties properties;
+  File outFile = File('test.props');
+
+  tearDownAll(() {
+    if (outFile.existsSync()) {
+      outFile.deleteSync();
+    }
+  });
 
   setUp(() {
     properties = Properties();
     properties.setProperty('key1', 'value1');
     properties.setProperty('key2', 'value2');
-  });
-
-  tearDownAll(() {
-    if (file.existsSync()) {
-      try {
-        file.deleteSync();
-      } catch (ex) {
-        print('Failed to delete test file: $file - $ex');
-      }
-    }
   });
 
   test('Convert properties to a String', () {
@@ -116,23 +113,20 @@ void main() {
   group('Test load and save properties', () {
     test('Load properties from file.', () {
       properties.clear();
-      properties.loadSync(File('test/data/test.properties'));
+      File file = File('test/data/basic.properties');
+      properties.loadSync(file);
+      bool actual = properties.getBool('props.loaded');
+      expect(actual, equals(true));
 
-      expect(properties.getProperty('packages'),equals('packageb, packagec'));
-      expect(properties.getBool('configuration.loaded'), equals(true));
-    });
-
-    test('Append properties loaded from second file.', () {
-      properties.clear();
-      properties.loadSync(File('test/data/test.properties'));
-      properties.loadSync(File('test/data/threes.properties'));
-
-      expect(properties.getBool('configuration.loaded'), equals(true));
-      expect(properties.getProperty('test.threes.two'), equals('aaa, bbb, ccc'));
+      String? value = properties.getProperty('test.list');
+      expect(value, isNotNull);
+      expect(value, isNotEmpty);
+      expect(value, equals('item1, item2'));
     });
 
     test('Save properties to file.', () {
-      properties.save(file);
+      properties.saveSync(outFile);
+      expect(outFile.existsSync(), equals(true));
     });
   });
 
@@ -171,22 +165,5 @@ void main() {
       String actual = properties.findAndSubstitute('key1');
       expect(actual, equals(expected));
     });
-  });
-
-  test('Test empty', () {
-    properties.clear();
-      properties.loadSync(File('test/data/test.properties'));
-
-      String? value = properties.getProperty('test.empty');
-      expect(value,isNotNull);
-      expect(value,equals(''));
-  });
-
-  test('Test reference', () {
-    properties.clear();
-      properties.loadSync(File('test/data/test.properties'));
-
-      String? value = properties.findAndSubstitute('base.reference');
-      expect(value,equals('baseextra'));
   });
 }

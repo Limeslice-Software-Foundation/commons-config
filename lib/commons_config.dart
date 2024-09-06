@@ -29,6 +29,4 @@ export 'src/subset_configuration.dart';
 export 'src/interpol/config_interpolator.dart';
 export 'src/lookup/env_str_lookup.dart';
 export 'src/properties/properties.dart';
-export 'src/properties/properties_configuration.dart';
 export 'src/reloading/reloading_strategy.dart';
-

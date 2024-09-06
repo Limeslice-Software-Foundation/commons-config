@@ -15,7 +15,6 @@
 
 /// A strategy to decide if a configuration should be reloaded.
 abstract class ReloadingStrategy {
-
   /// Check if reloading is required for the configuration.
   bool reloadingRequired();
 
@@ -30,7 +29,6 @@ abstract class ReloadingStrategy {
 
 /// A strategy that never triggers a reloading.
 class InavriantReloadingStrategy extends ReloadingStrategy {
-
   /// Notify that reloading has been performed.
   @override
   void reloadingPerformed() {}

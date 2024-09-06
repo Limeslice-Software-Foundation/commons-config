@@ -22,11 +22,10 @@ import 'reloading/reloading_strategy.dart';
 
 /// A persistent configuration loaded and saved to a file.
 abstract class FileConfiguration extends Configuration {
-
   /// The underlying File to use.
   File? file;
 
-  /// The auto save flag. 
+  /// The auto save flag.
   /// Default is false.
   bool autoSave = false;
 
@@ -43,11 +42,11 @@ abstract class FileConfiguration extends Configuration {
 
   /// Gets a property from the configuration. This is the most basic get
   /// method for retrieving values of properties. In a typical implementation
-  /// of the <code>FileConfiguration</code> interface the other get methods 
-  /// (that return specific data types) will internally make use of this method. 
+  /// of the <code>FileConfiguration</code> interface the other get methods
+  /// (that return specific data types) will internally make use of this method.
   /// On this level variable substitution is not yet performed. The returned
   /// object is an internal representation of the property value for the passed
-  /// in key. It is owned by the <code>FileConfiguration</code> object. So a 
+  /// in key. It is owned by the <code>FileConfiguration</code> object. So a
   /// caller should not modify this object.
   Object? getPropertyDirect(String? key);
 
@@ -62,32 +61,32 @@ abstract class FileConfiguration extends Configuration {
   Iterator<String> getKeysDirect();
 
   /// Load the configuration from the specified file. Implementers should throw
-  /// <code>ConfigurationException</code> if an error occurs during the load 
+  /// <code>ConfigurationException</code> if an error occurs during the load
   /// operation.
   void loadFromFileSync(File file);
 
   /// Load the configuration from the specified file. Implementers should throw
-  /// <code>ConfigurationException</code> if an error occurs during the load 
+  /// <code>ConfigurationException</code> if an error occurs during the load
   /// operation.
   Future<void> loadFromFile(File file);
 
   /// Save the configuration to the specified file. Implementers should throw
-  /// <code>ConfigurationException</code> if an error occurs during the save 
+  /// <code>ConfigurationException</code> if an error occurs during the save
   /// operation.
   void saveToFileSync(File file);
 
   /// Save the configuration to the specified file. Implementers should throw
-  /// <code>ConfigurationException</code> if an error occurs during the save 
+  /// <code>ConfigurationException</code> if an error occurs during the save
   /// operation.
   Future<void> saveToFile(File file);
 
   //---------------------------------------------------------------------------
 
-  /// Load the configuration from the underlying File. Throws 
-  /// <code>ConfigurationException</code> if an error occurs during the load 
+  /// Load the configuration from the underlying File. Throws
+  /// <code>ConfigurationException</code> if an error occurs during the load
   /// operation.
   void load() {
-    if (file==null) {
+    if (file == null) {
       throw ConfigurationException('File has not been set.');
     }
     try {
@@ -97,11 +96,11 @@ abstract class FileConfiguration extends Configuration {
     }
   }
 
-  /// Save the configuration to the underlying File. Throws 
-  /// <code>ConfigurationException</code> if an error occurs during the save 
+  /// Save the configuration to the underlying File. Throws
+  /// <code>ConfigurationException</code> if an error occurs during the save
   /// operation.
   void save() {
-    if (file==null) {
+    if (file == null) {
       throw ConfigurationException('File has not been set.');
     }
     try {
@@ -123,7 +122,7 @@ abstract class FileConfiguration extends Configuration {
 
   /// Save the configuration if the automatic persistence is enabled.
   void possiblySave() {
-    if (autoSave && file!=null) {
+    if (autoSave && file != null) {
       save();
     }
   }
@@ -153,7 +152,7 @@ abstract class FileConfiguration extends Configuration {
   /// Reloads the associated configuration file. This method first clears the
   /// content of this configuration, then the associated configuration file is
   /// loaded again. Updates on this configuration which have not yet been saved
-  /// are lost. Calling this method would be like invoking 
+  /// are lost. Calling this method would be like invoking
   /// <code>reload()</code> without checking the reloading strategy.
   void refresh() {
     bool autoSaveBackup = autoSave;
