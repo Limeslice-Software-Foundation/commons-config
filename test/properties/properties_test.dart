@@ -116,11 +116,19 @@ void main() {
   group('Test load and save properties', () {
     test('Load properties from file.', () {
       properties.clear();
-      File file = File('test/data/test.properties');
-      properties.loadSync(file);
+      properties.loadSync(File('test/data/test.properties'));
 
-      expect(properties.getProperty('packages'),equals('packagea'));
+      expect(properties.getProperty('packages'),equals('packageb, packagec'));
       expect(properties.getBool('configuration.loaded'), equals(true));
+    });
+
+    test('Append properties loaded from second file.', () {
+      properties.clear();
+      properties.loadSync(File('test/data/test.properties'));
+      properties.loadSync(File('test/data/threes.properties'));
+
+      expect(properties.getBool('configuration.loaded'), equals(true));
+      expect(properties.getProperty('test.threes.two'), equals('aaa, bbb, ccc'));
     });
 
     test('Save properties to file.', () {
@@ -163,5 +171,22 @@ void main() {
       String actual = properties.findAndSubstitute('key1');
       expect(actual, equals(expected));
     });
+  });
+
+  test('Test empty', () {
+    properties.clear();
+      properties.loadSync(File('test/data/test.properties'));
+
+      String? value = properties.getProperty('test.empty');
+      expect(value,isNotNull);
+      expect(value,equals(''));
+  });
+
+  test('Test reference', () {
+    properties.clear();
+      properties.loadSync(File('test/data/test.properties'));
+
+      String? value = properties.findAndSubstitute('base.reference');
+      expect(value,equals('baseextra'));
   });
 }

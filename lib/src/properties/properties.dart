@@ -89,30 +89,47 @@ class Properties {
     return result;
   }
 
-  void _loadFromLines(List<String> lines) {
+  void _loadFromLines(List<String> lines, File file) {
     for (String l in lines) {
       String line = l.trim();
-      if(line.isNotEmpty && !_isCommentLine(line)) {
+      if (line.isNotEmpty && !_isCommentLine(line)) {
         List<String> tokens = StringUtils.split(line, '=:');
         if (tokens.length == 1) {
           _map[tokens[0]] = '';
         } else if (tokens.length > 1) {
-          _map[tokens[0]] = tokens[1];
+          if (tokens[0].trim() == 'include') {
+            _include(tokens, file);
+          } else {
+            _map[tokens[0]] = tokens[1];
+          }
         }
       }
     }
   }
 
+  void _include(List<String> tokens, File file) {
+    String filename = tokens[1].trim();
+    if (filename.contains('\${')) {
+      filename = filename.substring(_delimStartLen, filename.length-1);
+      filename = findAndSubstitute(filename);
+    }
+    loadSync(File('${file.parent.path}${Platform.pathSeparator}$filename'));
+  }
+
+  List<String> _getLines(String content) {
+    return StringUtils.split(content, '\n', true, '\\');
+  }
+
   /// Load the set of properties synchronously from the file.
   void loadSync(File file) {
-    List<String> lines = file.readAsLinesSync();
-    _loadFromLines(lines);
+    String fileContent = file.readAsStringSync();
+    _loadFromLines(_getLines(fileContent), file);
   }
 
   /// Load the set of propertis asynchronously from the file.
   Future<void> load(File file) async {
-    List<String> lines = await file.readAsLines();
-    _loadFromLines(lines);
+    String fileContent = await file.readAsString();
+    _loadFromLines(_getLines(fileContent), file);
   }
 
   /// Save the set of properties synchronously to the file.
@@ -248,23 +265,7 @@ class Properties {
   }
 
   bool _isCommentLine(String line) {
-    StrBuilder builder = StrBuilder(value: line);
+    StrBuilder builder = StrBuilder(value: line.trim());
     return builder.isEmpty || commentChars.contains(builder.charAt(0));
-  }
-
-  bool _checkCombineLines(String line) {
-    return _countTrailingBS(line) % 2 != 0;
-  }
-
-  int _countTrailingBS(String line) {
-    StrBuilder builder = StrBuilder(value: line);
-    int bsCount = 0;
-    for (int idx = builder.length() - 1;
-        idx >= 0 && builder.charAt(idx) == '\\';
-        idx--) {
-      bsCount++;
-    }
-
-    return bsCount;
   }
 }
