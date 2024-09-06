@@ -13,12 +13,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 import 'dart:io';
+import 'dart:math';
 
 import 'package:commons_config/commons_config.dart';
 import 'package:test/test.dart';
 
 void main() {
   late Properties properties;
+  File outFile = File('test.props');
+
+  tearDownAll(() {
+    if (outFile.existsSync()) {
+      outFile.deleteSync();
+    }
+  });
 
   setUp(() {
     properties = Properties();
@@ -105,22 +113,20 @@ void main() {
   group('Test load and save properties', () {
     test('Load properties from file.', () {
       properties.clear();
-      File file = File('test/data/logging.props');
+      File file = File('test/data/basic.properties');
       properties.loadSync(file);
+      bool actual = properties.getBool('props.loaded');
+      expect(actual, equals(true));
 
-      expect(properties.getProperty('log4delphi.rootLogger'),
-          equals('DEBUG, fileAppender'));
-      expect(properties.getBool('log4delphi.debug'), equals(true));
-      expect(properties.getProperty('log4delphi.appender.fileAppender'),
-          equals('TRollingFileAppender'));
-      expect(
-          properties.getInt('log4delphi.appender.fileAppender.MaxBackupIndex'),
-          equals(3));
+      String? value = properties.getProperty('test.list');
+      expect(value, isNotNull);
+      expect(value, isNotEmpty);
+      expect(value, equals('item1, item2'));
     });
 
     test('Save properties to file.', () {
-      File file = File('test.props');
-      properties.save(file);
+      properties.saveSync(outFile);
+      expect(outFile.existsSync(), equals(true));
     });
   });
 

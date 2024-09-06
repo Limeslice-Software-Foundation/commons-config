@@ -18,13 +18,15 @@
 /// to read configuration data from a variety of sources.
 library;
 
-export 'src/properties/properties.dart';
-export 'src/exception.dart';
-export 'src/property_converter.dart';
-export 'src/lookup/env_str_lookup.dart';
-export 'src/interpol/config_interpolator.dart';
+export 'src/base_configuration.dart';
 export 'src/configuration.dart';
+export 'src/exception.dart';
+export 'src/file_configuration.dart';
 export 'src/map_configuration.dart';
 export 'src/prefixed_keys_iterator.dart';
+export 'src/property_converter.dart';
 export 'src/subset_configuration.dart';
-export 'src/base_configuration.dart';
+export 'src/interpol/config_interpolator.dart';
+export 'src/lookup/env_str_lookup.dart';
+export 'src/properties/properties.dart';
+export 'src/reloading/reloading_strategy.dart';

@@ -76,7 +76,7 @@ class Properties {
         if (tokens.length == 1) {
           _map[tokens[0]] = '';
         } else if (tokens.length > 1) {
-          _map[tokens[0]] = tokens[1];
+          _map[tokens[0].trim()] = tokens[1].trim();
         }
       }
     }

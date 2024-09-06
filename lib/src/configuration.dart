@@ -68,11 +68,11 @@ abstract class Configuration {
 
   /// Gets a property from the configuration. This is the most basic get
   /// method for retrieving values of properties. In a typical implementation
-  /// of the {@code Configuration} interface the other get methods (that
+  /// of the <code>Configuration</code> interface the other get methods (that
   /// return specific data types) will internally make use of this method. On
   /// this level variable substitution is not yet performed. The returned
   /// object is an internal representation of the property value for the passed
-  /// in key. It is owned by the {@code Configuration} object. So a caller
+  /// in key. It is owned by the <code>Configuration</code> object. So a caller
   /// should not modify this object.
   Object? getProperty(String? key);
 
