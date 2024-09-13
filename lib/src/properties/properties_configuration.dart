@@ -18,6 +18,7 @@ import 'package:deepcopy/deepcopy.dart';
 import 'package:commons_config/commons_config.dart';
 
 import 'properties_configuration_reader.dart';
+import 'properties_configuration_writer.dart';
 
 class PropertiesConfiguration extends FileConfiguration {
   /// The fedault include keyword is 'include'
@@ -26,8 +27,11 @@ class PropertiesConfiguration extends FileConfiguration {
   /// The default comment characters are # and !
   static final String defaultCommentChars = '#!';
 
-  /// The default separartor characters are = and :
+  /// The default set of separartor characters are = and :
   static final String defaultSeparatorChars = '=:';
+
+  /// The default separator char is =.
+  static final String defaultSeparator = '=';
 
   /// The default escape char is a backslash: \
   static final String defaultEscapeChar = '\\';
@@ -41,8 +45,11 @@ class PropertiesConfiguration extends FileConfiguration {
   /// The comment characters to use.
   String commentChars = defaultCommentChars;
 
-  /// The separator characters to use.
+  /// The set of separator characters to use.
   String separatorChars = defaultSeparatorChars;
+
+  /// The separator character to use.
+  String separartor = defaultSeparator;
 
   /// The escape character to use.
   String escapeChar = defaultEscapeChar;
@@ -136,14 +143,15 @@ class PropertiesConfiguration extends FileConfiguration {
   }
 
   @override
-  Future<void> saveToFile(File file) {
-    // TODO: implement saveToFile
-    throw UnimplementedError();
+  Future<void> saveToFile(File file) async {
+    PropertiesConfigurationWriter writer = PropertiesConfigurationWriter(configuration: this);
+    await writer.saveToFile(file);
   }
 
   @override
   void saveToFileSync(File file) {
-    // TODO: implement saveToFileSync
+    PropertiesConfigurationWriter writer = PropertiesConfigurationWriter(configuration: this);
+    writer.saveToFileSync(file);
   }
 
 }
