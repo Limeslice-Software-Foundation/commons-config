@@ -2,8 +2,6 @@
 
 The Commons Configuration software library provides a generic configuration interface which enables a Dart/Flutter application to read configuration data from a variety of sources.
 
-Note that this project is still in its early stages and so may not yet provide complete/full functionality. We will be building up functionality over the next few months through numerous small iterative releases.
-
 ## Table of Contents
 - [Commons Configuration](#commons-configuration)
   - [Table of Contents](#table-of-contents)
@@ -31,11 +29,13 @@ int i = config.getInt("number");
 ```
 
 ### Features
-To do: list the features
+- Commons Configuration allows you to access configuration properties from a variety of different sources.
+- Mix configurations from heterogeneous sources and treat them like a single logic configuration.
+- Accessed in the same way through the generic Configuration interface.
 
 ## Getting Started
 
-Add the package as a dependency.
+Add the package as a dependency and import the library.
 
 ### Installation
 Add the package to your dependencies.

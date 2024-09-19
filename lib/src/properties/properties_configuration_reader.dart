@@ -17,15 +17,12 @@ import 'dart:io';
 import 'package:commons_lang/commons_lang.dart';
 
 import 'properties_configuration.dart';
+import 'properties_helper.dart';
 
 /// This class handles reading configuration properties from a file.
 /// Typically this class handles multiline values and escaping them,
 /// comment lines and multi value (list) properties and their escaping.
 class PropertiesConfigurationReader {
-
-  /// A regex to find back slashes
-  final RegExp exp = RegExp(r'^\\+');
-
   /// The configuration to load properties for.
   final PropertiesConfiguration configuration;
 
@@ -35,17 +32,10 @@ class PropertiesConfigurationReader {
   /// Create a new instance for the given configuration.
   PropertiesConfigurationReader({required this.configuration});
 
-  /// Reverse the given string and count how many back slashes appear at the front.
-  int _checkLineEscape(String line) {
-    String reversed = String.fromCharCodes(line.codeUnits.reversed);
-    RegExpMatch? match = exp.firstMatch(reversed);
-    return match == null ? 0 : match.end;
-  }
-
   /// Trim and remove any trailing back slashes
   String _cleanLine(String line) {
     String tmp = line.trim();
-    int x = _checkLineEscape(tmp);
+    int x = countTrailingBS(tmp);
     if (x % 2 != 0) {
       tmp = tmp.substring(0, tmp.length - 1);
     }
@@ -61,18 +51,17 @@ class PropertiesConfigurationReader {
     }
   }
 
-  /// Process the given line as a property. 
-  /// This will split the property at the separator using any escape chars as 
+  /// Process the given line as a property.
+  /// This will split the property at the separator using any escape chars as
   /// appropriate. If file includes ar enabled, files will also be included.
   void _processProperty(String line) {
     List<String> tokens = StringUtils.split(line.trim(),
         configuration.separatorChars, true, configuration.escapeChar);
     String propertyName = tokens[0];
     String propertyValue = '';
-    if(tokens.length>1) {
+    if (tokens.length > 1) {
       propertyValue = tokens[1];
     }
-    
 
     if (propertyName.isNotEmpty) {
       if (configuration.include.isNotEmpty &&
@@ -107,7 +96,7 @@ class PropertiesConfigurationReader {
           !line.startsWith('!') &&
           line.isNotEmpty) {
         if (line.endsWith('\\')) {
-          int count = _checkLineEscape(line);
+          int count = countTrailingBS(line);
           // check if we have a multline
           if (count % 2 == 0) {
             if (isMultiLine) {
@@ -140,7 +129,7 @@ class PropertiesConfigurationReader {
   /// Load a file asynchronously.
   Future<void> loadFromFile(File file) async {
     currentFile = file;
-    if(await file.exists()) {
+    if (await file.exists()) {
       List<String> lines = await file.readAsLines();
       _processLines(lines);
     }
@@ -148,7 +137,7 @@ class PropertiesConfigurationReader {
 
   /// Load a file synchronously.
   void loadFromFileSync(File file) {
-    if(file.existsSync()) {
+    if (file.existsSync()) {
       currentFile = file;
       _processLines(file.readAsLinesSync());
     }

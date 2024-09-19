@@ -1,3 +1,7 @@
+## 0.0.8
+- Add FileConfiguration class.
+- Add PropertiesConfiguration class.
+
 ## 0.0.7
 - Add SubsetConfiguration class.
 - Add subset method on Configuration.
