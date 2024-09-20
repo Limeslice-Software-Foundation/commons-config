@@ -74,28 +74,6 @@ void main() {
     expect(actual, equals(expected));
   });
 
-  test('Test load included file', () {
-    bool expected = true;
-    bool actual = conf.getBool('include.loaded');
-    expect(actual, equals(expected));
-  });
-
-  test('Test load included interpolation', () {
-    bool expected = true;
-    bool actual = conf.getBool('include.interpol.loaded');
-    expect(actual, equals(expected));
-  });
-
-  test('Test set include keyworld', () {
-    PropertiesConfiguration config = PropertiesConfiguration();
-    config.include = 'import';
-    config.loadFromFileSync(File('test/data/import.properties'));
-    bool actual = conf.getBool('include.loaded');
-    bool expected = true;
-    expect(actual, equals(expected));
-    expect(config.getList('packages').length, equals(3));
-  });
-
   test('Test disable includes', () {
     PropertiesConfiguration config = PropertiesConfiguration();
     config.includesAllowed = false;
@@ -107,15 +85,6 @@ void main() {
   test('Test List', () {
     List actual = conf.getList('packages');
     expect(actual.length, equals(3));
-  });
-
-  test('Test load file', () {
-    PropertiesConfiguration config =
-        PropertiesConfiguration(file: File(testPropsFilename));
-    config.load();
-    bool expected = true;
-    bool actual = config.getBool('configuration.loaded');
-    expect(actual, equals(expected));
   });
 
   test('Test string with escape', () {
@@ -174,60 +143,143 @@ void main() {
     expect(conf.getString('test.separator in.key'), equals('foo'));
   });
 
-  test('Test save to file', () {
-    conf.addProperty("string", "value1");
-    conf.saveToFileSync(outFile);
-    expect(outFile.existsSync(), equals(true));
+  group('Test including files', () {
+    test('Test load included file', () {
+      bool expected = true;
+      bool actual = conf.getBool('include.loaded');
+      expect(actual, equals(expected));
+    });
 
-    PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
-    check.load();
-    assertEquals(conf, check);
+    test('Test load included interpolation', () {
+      bool expected = true;
+      bool actual = conf.getBool('include.interpol.loaded');
+      expect(actual, equals(expected));
+    });
+
+    test('Test set include keyworld', () {
+      PropertiesConfiguration config = PropertiesConfiguration();
+      config.include = 'import';
+      config.loadFromFileSync(File('test/data/import.properties'));
+      bool actual = conf.getBool('include.loaded');
+      bool expected = true;
+      expect(actual, equals(expected));
+      expect(config.getList('packages').length, equals(3));
+    });
   });
 
-  test('Test in memory created save', () {
-    PropertiesConfiguration pc = PropertiesConfiguration();
-    pc.addProperty("string", "value1");
-    List list = [];
-    for (int i = 1; i < 5; i++) {
-      list.add('value$i');
+  group('Test loading files', () {
+    test('Test save to file', () {
+      conf.addProperty("string", "value1");
+      conf.saveToFileSync(outFile);
+      expect(outFile.existsSync(), equals(true));
+
+      PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
+      check.load();
+      assertEquals(conf, check);
+    });
+
+    test('Test in memory created save', () {
+      PropertiesConfiguration pc = PropertiesConfiguration();
+      pc.addProperty("string", "value1");
+      List list = [];
+      for (int i = 1; i < 5; i++) {
+        list.add('value$i');
+      }
+
+      pc.addProperty("array", list);
+      pc.saveToFileSync(outFile);
+
+      expect(outFile.existsSync(), equals(true));
+
+      PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
+      check.load();
+      assertEquals(pc, check);
+    });
+
+    test('Test save to file delimiter parsing', () {
+      conf.clear();
+      conf.delimiterParsingDisabled = true;
+      conf.addProperty("test.list", "a,b,c");
+      conf.addProperty("test.dirs", "C:\\Temp\\,D:\\Data\\");
+      conf.saveToFileSync(outFile);
+
+      expect(outFile.existsSync(), equals(true));
+
+      PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
+      check.delimiterParsingDisabled = true;
+      check.load();
+      assertEquals(conf, check);
+    });
+
+    test('Test save to file escaped characters', () {
+      conf.addProperty("test.dirs", "C:\\Temp\\\\,D:\\Data\\\\,E:\\Test\\");
+
+      List dirs = conf.getList('test.dirs');
+      expect(dirs.length, equals(3));
+
+      conf.saveToFileSync(outFile);
+      expect(outFile.existsSync(), equals(true));
+
+      PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
+      check.load();
+      assertEquals(conf, check);
+    });
+  });
+
+  group('Test loading files', () {
+    void setUpSavedProperties() {
+      StringBuffer buffer = StringBuffer();
+      buffer.writeln('a = one');
+      buffer.writeln('b = two');
+      buffer.writeln('c = three');
+      outFile.writeAsStringSync(buffer.toString());
+
+      conf = PropertiesConfiguration();
+      conf.autoSave = true;
+      conf.file = outFile;
+      conf.load();
+
+      expect(conf.getString('a'), equals('one'));
+      expect(conf.getString('b'), equals('two'));
+      expect(conf.getString('c'), equals('three'));
     }
 
-    pc.addProperty("array", list);
-    pc.saveToFileSync(outFile);
+    void checkSavedConfig() {
+      PropertiesConfiguration checkConfig =
+          PropertiesConfiguration(file: outFile);
+      checkConfig.load();
+      assertEquals(conf, checkConfig);
+    }
 
-    expect(outFile.existsSync(), equals(true));
+    test('Test load file', () {
+      PropertiesConfiguration config =
+          PropertiesConfiguration(file: File(testPropsFilename));
+      config.load();
+      bool expected = true;
+      bool actual = config.getBool('configuration.loaded');
+      expect(actual, equals(expected));
+    });
 
-    PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
-    check.load();
-    assertEquals(pc, check);
-  });
+    test('Test load with autosave', () {
+      setUpSavedProperties();
+    });
 
-  test('Test save to file delimiter parsing', () {
-    conf.clear();
-    conf.delimiterParsingDisabled = true;
-    conf.addProperty("test.list", "a,b,c");
-    conf.addProperty("test.dirs", "C:\\Temp\\,D:\\Data\\");
-    conf.saveToFileSync(outFile);
+    test('Test load with autosave and set existing property', () {
+      setUpSavedProperties();
+      conf.setProperty("a", "moreThanOne");
+      checkSavedConfig();
+    });
 
-    expect(outFile.existsSync(), equals(true));
+    test('Test load with autosave and set new property', () {
+      setUpSavedProperties();
+      conf.setProperty("d", "four");
+      checkSavedConfig();
+    });
 
-    PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
-    check.delimiterParsingDisabled = true;
-    check.load();
-    assertEquals(conf, check);
-  });
-
-  test('Test save to file escaped characters', () {
-    conf.addProperty("test.dirs", "C:\\Temp\\\\,D:\\Data\\\\,E:\\Test\\");
-
-    List dirs = conf.getList('test.dirs');
-    expect(dirs.length, equals(3));
-
-    conf.saveToFileSync(outFile);
-    expect(outFile.existsSync(), equals(true));
-
-    PropertiesConfiguration check = PropertiesConfiguration(file: outFile);
-    check.load();
-    assertEquals(conf, check);
+    test('Test load with autosave and add new property', () {
+      setUpSavedProperties();
+      conf.addProperty("d", "four");
+      checkSavedConfig();
+    });
   });
 }

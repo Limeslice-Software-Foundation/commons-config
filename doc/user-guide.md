@@ -247,3 +247,65 @@ config.dirs = \\\\share2
 
 ## File-based Configurations
 
+Often configuration properties are stored in files on the user's hard disk, e.g. in .properties files or as XML documents. Configuration classes that deal with such properties need to provide typical operations like loading or saving files. The files to be processed can be specified in several different flavors like <code>File</code> objects or relative or absolute path names.
+
+To provide a consistent way of dealing with configuration files in Commons Configuration the <code>FileConfiguration</code> interface exists. FileConfiguration defines a standard API for accessing files and is implemented by many configuration implementations, including PropertiesConfiguration.
+
+In the following sections we take a closer look at the methods of the FileConfiguration interface and how they are used.
+
+### Specifying the file
+
+When creating a file configuration you can pass in an optional <code>File</code> instance as a parameter in the constructor.
+
+You also have access to the <code>file</code> property and can set that.
+
+### Loading
+
+File configuration provides a <code>load</code> method that will load the configuration from the file. If a file has not been set then a <code>ConfigurationException</code> is thrown.
+
+The <code>load</code> method calls the <code>loadFromFileSync</code> abstract method. All subclasses must implement this method.
+
+#### Abstract load methods
+
+File configuration defines two abstract methods that must be implemented by subclasses, one for synchronous reading of a file and one for asynchronous reading of a file:
+
+```Dart
+void loadFromFileSync(File file);
+Future<void> loadFromFile(File file);
+```
+
+### Saving
+
+File configuration provides a <code>save</code> method that will write configuration properties to the file. If a file has not been set then a <code>ConfigurationException</code> is thrown.
+
+The <code>save</code> method call the <code>saveToFileSync</code> abstract method. All subclasses must implement this method.
+
+#### Abstract save methods
+
+File configuration defines two abstract methods that must be implemented by subclasses, one for synchronous saving of a file and one for asynchronous saving of a file:
+
+```Dart
+void saveToFileSync(File file);
+Future<void> saveToFile(File file);
+```
+
+#### Example loading and saving
+
+```Dart
+PropertiesConfiguration config = PropertiesConfiguration(File('gui.properties'));
+config.load();
+config.setProperty('colors.background','#000000');
+config.save();
+```
+
+### Automatic Saving
+
+If you want to ensure that every modification of a configuration object is immediately written to disk, you can enable the automatic saving mode. This is done through the <code>autoSave</code> property. The dafult value for <code>autoSave</code> is <code>false</code>.
+
+```Dart
+PropertiesConfiguration config = PropertiesConfiguration(File('gui.properties'));
+config.autoSave = true;
+config.setProperty("colors.background", "#000000"); // the configuration is saved after this call
+```
+
+ Be careful with this property set to true when you have many updates on your configuration, this may lead to many I/O operations. 
