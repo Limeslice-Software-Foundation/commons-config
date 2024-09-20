@@ -497,7 +497,7 @@ abstract class Configuration {
         list.add(interpolate(value.iterator.current));
       }
     } else if (value == null) {
-      if(defaultValue!=null) {
+      if (defaultValue != null) {
         return defaultValue;
       }
     } else {

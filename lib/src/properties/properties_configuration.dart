@@ -58,7 +58,7 @@ class PropertiesConfiguration extends FileConfiguration {
   Map<String, Object?> _map;
 
   /// Create a new empty configuration instance.
-  PropertiesConfiguration({super.file}) :_map = {};
+  PropertiesConfiguration({super.file}) : _map = {};
 
   @override
   void addPropertyDirect(String key, Object value) {
@@ -79,7 +79,7 @@ class PropertiesConfiguration extends FileConfiguration {
 
   @override
   void clearPropertyDirect(String key) {
-   _map.remove(key);
+    _map.remove(key);
   }
 
   @override
@@ -123,7 +123,8 @@ class PropertiesConfiguration extends FileConfiguration {
     bool autoSaveBak = autoSave;
     autoSave = false;
     try {
-      PropertiesConfigurationReader reader = PropertiesConfigurationReader(configuration: this);
+      PropertiesConfigurationReader reader =
+          PropertiesConfigurationReader(configuration: this);
       await reader.loadFromFile(file);
     } finally {
       autoSave = autoSaveBak;
@@ -135,7 +136,8 @@ class PropertiesConfiguration extends FileConfiguration {
     bool autoSaveBak = autoSave;
     autoSave = false;
     try {
-      PropertiesConfigurationReader reader = PropertiesConfigurationReader(configuration: this);
+      PropertiesConfigurationReader reader =
+          PropertiesConfigurationReader(configuration: this);
       reader.loadFromFileSync(file);
     } finally {
       autoSave = autoSaveBak;
@@ -144,14 +146,15 @@ class PropertiesConfiguration extends FileConfiguration {
 
   @override
   Future<void> saveToFile(File file) async {
-    PropertiesConfigurationWriter writer = PropertiesConfigurationWriter(configuration: this);
+    PropertiesConfigurationWriter writer =
+        PropertiesConfigurationWriter(configuration: this);
     await writer.saveToFile(file);
   }
 
   @override
   void saveToFileSync(File file) {
-    PropertiesConfigurationWriter writer = PropertiesConfigurationWriter(configuration: this);
+    PropertiesConfigurationWriter writer =
+        PropertiesConfigurationWriter(configuration: this);
     writer.saveToFileSync(file);
   }
-
 }

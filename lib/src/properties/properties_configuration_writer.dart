@@ -49,7 +49,7 @@ class PropertiesConfigurationWriter {
       valueStr = valueStr.replaceAll(configuration.separartor,
           '${configuration.escapeChar}${configuration.separartor}');
     }
-    if (valueStr.contains(configuration.listDelimiter)) {
+    if (!configuration.delimiterParsingDisabled) {
       valueStr = valueStr.replaceAll(configuration.listDelimiter,
           '${configuration.escapeChar}${configuration.listDelimiter}');
     }
