@@ -90,7 +90,7 @@ abstract class FileConfiguration extends Configuration {
       throw ConfigurationException('File has not been set.');
     }
     try {
-      loadFromFile(file!);
+      loadFromFileSync(file!);
     } catch (exception) {
       throw ConfigurationException('Failed to load file: $exception');
     }
@@ -104,7 +104,7 @@ abstract class FileConfiguration extends Configuration {
       throw ConfigurationException('File has not been set.');
     }
     try {
-      saveToFile(file!);
+      saveToFileSync(file!);
     } catch (exception) {
       throw ConfigurationException('Failed to save file: $exception');
     }

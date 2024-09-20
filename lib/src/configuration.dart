@@ -497,7 +497,9 @@ abstract class Configuration {
         list.add(interpolate(value.iterator.current));
       }
     } else if (value == null) {
-      // do nothing here
+      if (defaultValue != null) {
+        return defaultValue;
+      }
     } else {
       throw ArgumentError('$key doesn\'t map to a List object: $value');
     }

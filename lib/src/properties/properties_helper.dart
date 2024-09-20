@@ -13,21 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// The Commons Configuration software library provides a generic
-/// configuration interface which enables a Dart/Flutter application
-/// to read configuration data from a variety of sources.
-library;
+/// A regex to find back slashes at the end of a string.
+final RegExp exp = RegExp(r'\\+$');
 
-export 'src/base_configuration.dart';
-export 'src/configuration.dart';
-export 'src/exception.dart';
-export 'src/file_configuration.dart';
-export 'src/map_configuration.dart';
-export 'src/prefixed_keys_iterator.dart';
-export 'src/property_converter.dart';
-export 'src/subset_configuration.dart';
-export 'src/interpol/config_interpolator.dart';
-export 'src/lookup/env_str_lookup.dart';
-export 'src/properties/properties.dart';
-export 'src/properties/properties_configuration.dart';
-export 'src/reloading/reloading_strategy.dart';
+/// Count the number of back slashes at the end of a string.
+int countTrailingBS(String input) {
+  RegExpMatch? match = exp.firstMatch(input);
+  int result = 0;
+  if (match != null) {
+    result = match.end - match.start;
+  }
+  return result;
+}
