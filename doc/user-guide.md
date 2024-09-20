@@ -6,9 +6,17 @@ This document describes the features of the Commons Configuration library; start
 
 ## Table of Contents
 
+- [Commons Configuration User Guide](#commons-configuration-user-guide)
+  - [About](#about)
+  - [Table of Contents](#table-of-contents)
+  - [Using Configuration](#using-configuration)
+  - [Basic Features](#basic-features)
+  - [Properties Files](#properties-files)
+  
+
 ## Using Configuration
 
-Commons Configuration allows you to access configuration properties from a variety of different sources. No matter if they are stored in a properties file, a XML document, or a JSON codument, they can all be accessed in the same way through the generic Configuration interface.
+Commons Configuration allows you to access configuration properties from a variety of different sources. No matter if they are stored in a properties file, a XML document, or a JSON document, they can all be accessed in the same way through the generic Configuration interface.
 
 Another strength of Commons Configuration is its ability to mix configurations from heterogeneous sources and treat them like a single logic configuration. This section will introduce you to the different configurations available and will show you how to combine them.
 
@@ -65,7 +73,7 @@ application.version = 1.6.2
 application.title = ${application.name} ${application.version}
 ```
 
-If you now retrieve the value for the <code>application.title<code> property, the result will be Killer App 1.6.2. So per default variables are interpreted as the keys of other properties. This is only a special case, the general syntax of a variable name is <code>${prefix:name}</code>. The prefix tells Commons Configuration that the variable is to be evaluated in a certain context. We have already seen that the context is the current configuration instance if the prefix is missing. The following other prefix names are supported by default:
+If you now retrieve the value for the <code>application.title</code> property, the result will be Killer App 1.6.2. So per default variables are interpreted as the keys of other properties. This is only a special case, the general syntax of a variable name is <code>${prefix:name}</code>. The prefix tells Commons Configuration that the variable is to be evaluated in a certain context. We have already seen that the context is the current configuration instance if the prefix is missing. The following other prefix names are supported by default:
 
 | Prefix      | Description |
 | ----------- | ----------- |
@@ -93,7 +101,7 @@ EchoLookup echoLookup = EchoLookup();
 config.getInterpolator.registerLookup('echo', echoLookup);
 ```
 
-## Properties files
+## Properties Files
 
 Properties files are a popular means of configuring applications and Commons Configuration supports this format. This section introduces the features of the <code>PropertiesConfiguration</code> class. Note that PropertiesConfiguration is a very typical example for an implementation of the Configuration interface and many of the features described in this section (e.g. list handling or interpolation) are supported by other configuration classes as well. This is because most configuration implementations that ship with Commons Configuration are derived from the common base <code>Configuration</code> class , which implements these features.
 
